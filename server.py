@@ -16,5 +16,9 @@ def about():
 def analysis():
     return render_template('analysis.html')
 
+@app.route('/redraw_graph.html')
+def redraw_graph():
+    return render_template('redraw_graph.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
