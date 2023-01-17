@@ -126,6 +126,7 @@
 	box-shadow: 0 0 0 40px rgba(98,0,238,.2);
 }
 
+
 input[type=range] {
 	position: absolute;
 	pointer-events: none;
@@ -194,8 +195,8 @@ position: absolute;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.0.1/chart.min.js" integrity="sha512-tQYZBKe34uzoeOjY9jr3MX7R/mo7n25vnqbnrkskGr4D6YOoPYSpyafUAzQVjV6xAozAqUFIEFsCO4z8mnVBXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- <script src="slide.js"></script> -->
-<!-- <script src="/Users/jiminkoo/BSEEG-Refactor/templates/slide.js"></script> -->
-<script type="text/javascript">
+!-- <script src="/Users/jiminkoo/BSEEG-Refactor/templates/slide.js"></script> -->
+dilrwkfgojwhn<script type="text/javascript">
     var inputLeft = document.getElementById("input-left");
     var inputRight = document.getElementById("input-right");
 
@@ -217,6 +218,8 @@ position: absolute;
       return _this.value;
     }
     var start_x = setLeftValue();
+    // console.log(start_x);
+    document.getElementById("first_x").innerHTML = start_x;
 
     function setRightValue() {
       var _this = inputRight,
@@ -232,7 +235,9 @@ position: absolute;
       return _this.value;
     }
     var end_x = setRightValue();
-
+    // console.log(end_x);
+    document.getElementById("last_x").innerHTML = end_x;
+    
     inputLeft.addEventListener("input", setLeftValue);
     inputRight.addEventListener("input", setRightValue);
 
@@ -261,9 +266,95 @@ position: absolute;
     inputRight.addEventListener("mouseup", function() {
       thumbRight.classList.remove("active");
     });
+
+    var xValues = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15.,16,17,18,19,20,21,22,23,24];
+    var y1_Values = [2,2.5,2.6,1.9,2.7,2.3,3.1,3.5,3.3,3.5,3.9,4.3,3.9,3.4,3.0,2.3,3.1,3.5,3.3,3.5,3.9,2.3,3.1,3.5,3.3,];
+    var y2_Values = [2.5,3.3,3.5,3.9,2.3,2,2.5,3.9,3.4,3.0,2.3,3.1,3.5,3.1,3.5,3.3,3.5,3.9,4.3,3.3,3.5,3.9,2.3,3.1,3.5,3.3,];
+
+    let label0 = 0;
+    var rev_xValues = [];
+    var rev_y1_Values = [];
+    var rev_y2_Values = [];
+    console.log(label0);
+    console.log(start_x);
+    console.log(end_x);
+
+    // for some reason, "for loop" does not work. just use "do-while" loop
+    // //start_x = 3;
+    // //for (let i = start_x; i < end_x; i++)
+    // //for (let i = start_x; i++;)
+    // let j = end_x
+    // for (let i = start_x;;)
+    // {
+    //   console.log(i);
+    //   console.log(start_x);
+    //   console.log(end_x);
+    //   console.log(j);
+    //   if (i > j)
+    //   {
+    //     break;
+    //   }
+    //   else
+    //   {
+    //     console.log(xValues[10]);
+    //   }
+
+    //   console.log(label0);
+    //   console.log(i);
+    //   console.log(xValues[i]);
+    //   rev_xValues[label0] = xValues[i];
+    //   rev_y1_Values[label0] = y1_Values[i];
+    //   rev_y2_Values[label0] = y2_Values[i];
+    //   label0++;
+    //   i++;
+    // }
+    let i = start_x;
+    do {
+      // console.log(label0);
+      // console.log(i);
+      // console.log(xValues[i]);
+      rev_xValues[label0] = xValues[i];
+      rev_y1_Values[label0] = y1_Values[i];
+      rev_y2_Values[label0] = y2_Values[i];
+      label0++;
+      i++;
+    } while ( i <= end_x)
+
+  new Chart(document.getElementById("line-chart"), {
+    type: 'line',
+    data: {
+      labels: rev_xValues,
+      datasets: [{ 
+          data: rev_y1_Values,
+          label: "EEG1",
+          borderColor: "#3e95cd",
+          fill: false
+        }, { 
+          data: rev_y2_Values,
+          label: "EEG2",
+          borderColor: "#8e5ea2",
+          fill: false
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'BSEEG Scores'
+      },
+      scales: {
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'probability'
+        }
+      }]
+    }
+    }
+  });
 </script>
 
-<script>
+<!-- <script>
     new Chart(document.getElementById("line-chart"), {
   type: 'line',
   data: {
@@ -303,7 +394,7 @@ position: absolute;
     }
   }
 });
-</script>
+</script> -->
 {% endblock %}
 
 {% block navbar %}
@@ -331,8 +422,8 @@ position: absolute;
 <main>
   <div class="middle">
     <div class="multi-range-slider">
-      <input type="range" id="input-left" min="0" max="100" value="25">
-      <input type="range" id="input-right" min="0" max="100" value="75">
+      <input type="range" id="input-left" min="0" max="24" value="0">
+      <input type="range" id="input-right" min="0" max="24" value="24">
   
       <div class="slider">
         <div class="track"></div>
@@ -340,6 +431,8 @@ position: absolute;
         <div class="thumb left"></div>
         <div class="thumb right"></div>
       </div>
+      <h6> </h6>
+      <h5>Range (<span id="first_x"></span>, <span id="last_x"></span>)</h5>
     </div>
   </div>
 
@@ -354,7 +447,7 @@ position: absolute;
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
+<!-- <script>
 new Chart(document.getElementById("line-chart"), {
   type: 'line',
   data: {
@@ -387,7 +480,8 @@ new Chart(document.getElementById("line-chart"), {
   }
   }
 });
-</script>
+</script> -->
+
 
 <!-- <button type="button" class="setRange">Set range</button> -->
 <!-- <button type="button" class="setRange" onclick="window.location.href='https://med.stanford.edu/shinozaki.html';">Set range</button> -->
